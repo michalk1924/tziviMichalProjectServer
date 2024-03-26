@@ -1,7 +1,7 @@
 var mysql = require('mysql2');
 require('dotenv').config();
 
-var con = mysql.createConnection({
+export var connection = mysql.createConnection({
     host: process.env.HOST_NAME,
     user: process.env.USER,
     port: process.env.PORTSQL,
@@ -10,11 +10,11 @@ var con = mysql.createConnection({
 });
 
 const createDB = () => {
-    con.connect(function (err) {
+    connection.connect(function (err) {
         if (err) throw err;
         console.log("Connected!");
         var sql = "CREATE DATABASE jsonplaceholderDB;";
-        con.query(sql, function (err, result) {
+        connection.query(sql, function (err, result) {
             if (err) throw err;
             console.log("database created");
         });
@@ -22,55 +22,116 @@ const createDB = () => {
 }
 
 const deleteTable = (tableName) => {
-    con.connect(function (err) {
+    connection.connect(function (err) {
         if (err) throw err;
         console.log("Connected!");
         var sql = `DROP TABLE ${tableName};`;
-        con.query(sql, function (err, result) {
+        connection.query(sql, function (err, result) {
             if (err) throw err;
             console.log("Table created");
         });
     });
 }
 
-const createTableCustomers = async () => {
-    con.connect(function (err) {
-        if (err) ;
-        console.log("Connected!");
-        var sql = String.raw`CREATE TABLE customers (
-      firstName VARCHAR(255),
-      lastName VARCHAR(255),
-      id INT,
-      city VARCHAR(255),
-      street VARCHAR(255),
-      houseNumber VARCHAR(255),
-      birthday DATE,
-      phone INT,
-      mobilePhone INT,
-      DateOfReceivingAPositiveResult DATE,
-      dateOfRecovery DATE
-  );`;
-        con.query(sql, function (err, result) {
-            if (err) throw err;
-            console.log("Table created");
-        });
-    });
+const createTableComments = async () => {
+    try {
+        var sql = String.raw
+            `CREATE TABLE comments (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            postId INT,
+            name VARCHAR(255),
+            email VARCHAR(255),
+            body TEXT,
+            FOREIGN KEY (postId) REFERENCES posts(id)
+        );
+        `;
+        await connection.query(sql);
+        console.log('table messages created!');
+    } catch (err) {
+        console.log(err);
+    }
 }
 
-const createTableVaccinations = () => {
-    con.connect(function (err) {
-        if (err) throw err;
-        console.log("Connected!");
-        var sql = String.raw`CREATE TABLE vaccinations (
-    customerId int,
-    date DATE,
-    manufacturer VARCHAR(255)
-  );`;
-        con.query(sql, function (err, result) {
+const createTablePosts = async () => {
+    try {
+        var sql = String.raw
+          `CREATE TABLE posts (
+           id INT PRIMARY KEY AUTO_INCREMENT,
+           userId INT,
+           title VARCHAR(255),
+           body TEXT,
+           FOREIGN KEY (userId) REFERENCES users(id)
+       )`;
+        connection.query(sql, function (err, result) {
             if (err) throw err;
-            console.log("Table created");
+            console.log('table posts created!');
         });
-    });
+    } catch (err) {
+        console.log(err);
+    }
 }
 
-module.exports = { createDB, deleteTable };
+const createTableAlbums = async () => {
+    try {
+        var sql = String.raw
+        `CREATE TABLE albums (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        userId INT,
+        title VARCHAR(255)
+    );`;
+        connection.query(sql, function (err, result) {
+            if (err) throw err;
+            console.log('table albums created!');
+        });
+        console.log('table albums created!');
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+const createTableUsers = async () => {
+    try {
+        var sql = String.raw
+            `CREATE TABLE users (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            name VARCHAR(255),
+            username VARCHAR(255),
+            email VARCHAR(255),
+            address_street VARCHAR(255),
+            address_city VARCHAR(255),
+            phone VARCHAR(255),
+            website VARCHAR(255)
+        );`;
+        connection.query(sql, function (err, result) {
+            if (err) throw err;
+            console.log('table users created!');
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+const createTablePhotos = async () => {
+    try {
+        var sql = String.raw
+            `CREATE TABLE photos (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            albumId INT,
+            title VARCHAR(255),
+            url VARCHAR(255),
+            thumbnailUrl VARCHAR(255),
+            FOREIGN KEY (albumId) REFERENCES albums(id)
+        );`;
+        connection.query(sql, function (err, result) {
+            if (err) throw err;
+            console.log('table photos created!');
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+module.exports = {
+    createDB, deleteTable, createTablePosts, createTableComments, createTableAlbums,
+    createTableUsers, createTablePhotos
+};
