@@ -16,49 +16,48 @@ const router = express.Router();
 const tools = require('./tools');
 
 router.get('/', async (req, res) => {
-    const result = await tools.getAll("todos", "userId", req.query.userId);
-    console.log(result);
-    res.send(result[0]);
+    const result = await tools.getAll("photos", "albumId", req.query.userId);
+    res.send(result? result[0]: []);
 });
 
 router.post('/', async (req, res) => {
     try {
-        const todo = req.body;
+        const photo = req.body;
         const query = String.raw`
-            INSERT INTO TODOS (userId, title, completed)
-            VALUES (${todo.userId}, '${todo.title}', ${todo.completed ? 1 : 0});
+            INSERT INTO PHOTOS (albumId, title, url, thumbnailUrl)
+            VALUES (${photo.albumId}, '${photo.title}', '${photo.url}', '${photo.thumbnailUrl}');
         `;
         const result = await connection.promise().query(query);
-        console.log('Todo added');
+        console.log('Photo added');
         res.send();
     } catch (err) {
-        console.error('Error adding todo:', err);
-        res.status(500).send('Error adding todo');
+        console.error('Error adding photo:', err);
+        res.status(500).send('Error adding photo');
     }
 });
 
 router.delete('/:id', async (req, res) => {
-    await tools.deleteItem("todos", req.params.id);
+    await tools.deleteItem("photos", req.params.id);
     res.send();
 })
 
 router.put('/:id', async (req, res) => {
     try {
-        const todo = req.body;
+        const photo = req.body;
         const query = String.raw`
-            UPDATE TODOS 
-            SET title = '${todo.title}',
-                completed = ${todo.completed ? 1 : 0}
+            UPDATE PHOTOS 
+            SET title = '${photo.title}',
+                url = '${photo.url}',
+                thumbnailUrl = '${photo.thumbnailUrl}'
             WHERE id = ${req.params.id};
         `;
         await connection.promise().query(query);
-        console.log('Todo updated');
+        console.log('Photo updated');
         res.send();
     } catch (err) {
-        console.error('Error updating todo:', err);
-        res.status(500).send('Error updating todo');
+        console.error('Error updating photo:', err);
+        res.status(500).send('Error updating photo');
     }
 });
-
 
 module.exports = router;

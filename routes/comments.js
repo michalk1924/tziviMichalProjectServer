@@ -16,47 +16,47 @@ const router = express.Router();
 const tools = require('./tools');
 
 router.get('/', async (req, res) => {
-    const result = await tools.getAll("todos", "userId", req.query.userId);
-    console.log(result);
-    res.send(result[0]);
+    const result = await tools.getAll("comments", "postId", req.query.postId);
+    res.send(result? result[0]: 0);
 });
 
 router.post('/', async (req, res) => {
     try {
-        const todo = req.body;
+        const comment = req.body;
         const query = String.raw`
-            INSERT INTO TODOS (userId, title, completed)
-            VALUES (${todo.userId}, '${todo.title}', ${todo.completed ? 1 : 0});
+            INSERT INTO COMMENTS (postId, name, email, body)
+            VALUES (${comment.postId}, '${comment.name}', '${comment.email}', '${comment.body}');
         `;
         const result = await connection.promise().query(query);
-        console.log('Todo added');
+        console.log('Comment added');
         res.send();
     } catch (err) {
-        console.error('Error adding todo:', err);
-        res.status(500).send('Error adding todo');
+        console.error('Error adding comment:', err);
+        res.status(500).send('Error adding comment');
     }
 });
 
 router.delete('/:id', async (req, res) => {
-    await tools.deleteItem("todos", req.params.id);
+    await tools.deleteItem("comments", req.params.id);
     res.send();
 })
 
 router.put('/:id', async (req, res) => {
     try {
-        const todo = req.body;
+        const comment = req.body;
         const query = String.raw`
-            UPDATE TODOS 
-            SET title = '${todo.title}',
-                completed = ${todo.completed ? 1 : 0}
+            UPDATE COMMENTS 
+            SET name = '${comment.name}',
+                email = '${comment.email}',
+                body = '${comment.body}'
             WHERE id = ${req.params.id};
         `;
         await connection.promise().query(query);
-        console.log('Todo updated');
+        console.log('Comment updated');
         res.send();
     } catch (err) {
-        console.error('Error updating todo:', err);
-        res.status(500).send('Error updating todo');
+        console.error('Error updating comment:', err);
+        res.status(500).send('Error updating comment');
     }
 });
 

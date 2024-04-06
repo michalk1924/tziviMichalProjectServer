@@ -16,49 +16,47 @@ const router = express.Router();
 const tools = require('./tools');
 
 router.get('/', async (req, res) => {
-    const result = await tools.getAll("todos", "userId", req.query.userId);
-    console.log(result);
-    res.send(result[0]);
+    const result = await tools.getAll("posts", "userId", req.query.userId);
+    res.send(result? result[0]: []);
 });
 
 router.post('/', async (req, res) => {
     try {
-        const todo = req.body;
+        const post = req.body;
         const query = String.raw`
-            INSERT INTO TODOS (userId, title, completed)
-            VALUES (${todo.userId}, '${todo.title}', ${todo.completed ? 1 : 0});
+            INSERT INTO POSTS (userId, title, body)
+            VALUES (${post.userId}, '${post.title}', '${post.body}');
         `;
         const result = await connection.promise().query(query);
-        console.log('Todo added');
+        console.log('Post added');
         res.send();
     } catch (err) {
-        console.error('Error adding todo:', err);
-        res.status(500).send('Error adding todo');
+        console.error('Error adding post:', err);
+        res.status(500).send('Error adding post');
     }
 });
 
 router.delete('/:id', async (req, res) => {
-    await tools.deleteItem("todos", req.params.id);
+    await tools.deleteItem("posts", req.params.id);
     res.send();
 })
 
 router.put('/:id', async (req, res) => {
     try {
-        const todo = req.body;
+        const post = req.body;
         const query = String.raw`
-            UPDATE TODOS 
-            SET title = '${todo.title}',
-                completed = ${todo.completed ? 1 : 0}
+            UPDATE POSTS 
+            SET title = '${post.title}',
+                body = '${post.body}'
             WHERE id = ${req.params.id};
         `;
         await connection.promise().query(query);
-        console.log('Todo updated');
+        console.log('Post updated');
         res.send();
     } catch (err) {
-        console.error('Error updating todo:', err);
-        res.status(500).send('Error updating todo');
+        console.error('Error updating post:', err);
+        res.status(500).send('Error updating post');
     }
 });
-
 
 module.exports = router;

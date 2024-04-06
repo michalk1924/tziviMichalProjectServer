@@ -28,7 +28,7 @@ const deleteTable = (tableName) => {
         var sql = `DROP TABLE ${tableName};`;
         connection.query(sql, function (err, result) {
             if (err) throw err;
-            console.log("Table created");
+            console.log("Table deleted");
         });
     });
 }
@@ -42,7 +42,7 @@ const createTableComments = async () => {
             name VARCHAR(255),
             email VARCHAR(255),
             body TEXT,
-            FOREIGN KEY (postId) REFERENCES posts(id)
+            FOREIGN KEY (postId) REFERENCES posts(id) ON DELETE CASCADE
         );
         `;
         await connection.query(sql);
@@ -60,7 +60,7 @@ const createTablePosts = async () => {
            userId INT,
            title VARCHAR(255),
            body TEXT,
-           FOREIGN KEY (userId) REFERENCES users(id)
+           FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
        )`;
         connection.query(sql, function (err, result) {
             if (err) throw err;
@@ -77,7 +77,8 @@ const createTableAlbums = async () => {
         `CREATE TABLE albums (
         id INT PRIMARY KEY AUTO_INCREMENT,
         userId INT,
-        title VARCHAR(255)
+        title VARCHAR(255),
+        FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
     );`;
         connection.query(sql, function (err, result) {
             if (err) throw err;
@@ -120,7 +121,7 @@ const createTablePhotos = async () => {
             title VARCHAR(255),
             url VARCHAR(255),
             thumbnailUrl VARCHAR(255),
-            FOREIGN KEY (albumId) REFERENCES albums(id)
+            FOREIGN KEY (albumId) REFERENCES albums(id) ON DELETE CASCADE
         );`;
         connection.query(sql, function (err, result) {
             if (err) throw err;
@@ -131,7 +132,43 @@ const createTablePhotos = async () => {
     }
 }
 
+const createTableTodos = async () => {
+    try {
+       var sql = String.raw
+        `CREATE TABLE todos (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            userId INT,
+            title VARCHAR(255),
+            completed BOOLEAN,
+            FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+        );`;
+       connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log('table todos created!');
+       });
+   } catch (err) {
+       console.log(err);
+   }
+}
+
+const createTablePasswords = async () => {
+    try {
+       var sql = String.raw
+        `CREATE TABLE passwords (
+            userId INT PRIMARY KEY ,
+            password INT,
+            FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+        );`;
+       connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log('table passwords created!');
+       });
+   } catch (err) {
+       console.log(err);
+   }
+}
+
 module.exports = {
     createDB, deleteTable, createTablePosts, createTableComments, createTableAlbums,
-    createTableUsers, createTablePhotos
+    createTableUsers, createTablePhotos, createTableTodos, createTablePasswords
 };
