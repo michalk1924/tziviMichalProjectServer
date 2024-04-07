@@ -40708,6 +40708,15 @@ const insertUsers= async () => {
         console.log(error);
     }
 }
+const  insertAll = async () =>
+{
+    insertUsers();
+    insertAlbums();
+    insertPhotos();
+    insertPosts();
+    insertComments();
+    insertTodos();
+}
 module.exports = {
-    createDB, deleteTables, createTables, 
+    createDB, deleteTables, createTables, insertAll
 }; 
