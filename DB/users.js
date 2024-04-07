@@ -21,13 +21,14 @@ async function getUserById(id) {
     user.address.city = user.address_city ?? ''
     delete user.address_street;
     delete user.address_city;
+    delete user.website;
     return user;
   }
   else
     return null;
 }
 
-async function getUserUsername(username) {
+async function getUserByUsername(username) {
   const query = String.raw
     `SELECT * FROM users WHERE username = '${username}' `;
   const result = await connection.promise().query(query);
@@ -38,6 +39,7 @@ async function getUserUsername(username) {
     user.address.city = user.address_city ?? ''
     delete user.address_street;
     delete user.address_city;
+    delete user.website;
     return user;
   }
   else
@@ -79,4 +81,4 @@ async function login(username, password) {
   else return false;
 }
 
-module.exports = { addUser, updateUser, getUserById, getUserUsername, login }
+module.exports = { addUser, updateUser, getUserById, getUserByUsername, login }

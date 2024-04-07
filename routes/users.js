@@ -18,7 +18,7 @@ router.get('/:id', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const username = req.query.username;
-        const result = await usersDB.getUserUsername(username);
+        const result = await usersDB.getUserByUsername(username);
         res.send(JSON.stringify(result));
 
     } catch (err) {
@@ -45,8 +45,14 @@ router.post('/', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-    await toolsDB.deleteItem("users", req.params.id);
-    res.send();
+    try {
+        await toolsDB.deleteItem("users", req.params.id);
+        res.send();
+    }
+    catch (err) {
+        console.error('Error deleting user:', err);
+        res.status(500).send('Error deleting user');
+    }
 })
 
 router.put('/:id', async (req, res) => {
@@ -66,7 +72,7 @@ router.post('/login', async (req, res) => {
     try {
         const username = req.query.username;
         const password = req.body.password;
-        const result = await usersDB.login(username, password);      
+        const result = await usersDB.login(username, password);
         res.send(result);
     } catch (err) {
         console.error('Error', err);

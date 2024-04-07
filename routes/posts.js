@@ -6,13 +6,19 @@ const toolsDB = require('../DB/tools');
 const postsDB = require('../DB/posts');
 
 router.get('/', async (req, res) => {
-    const result = await toolsDB.getAll("posts", "userId", req.query.userId);
-    res.send(result? result[0]: []);
+    try {
+        const result = await toolsDB.getAll("posts", "userId", req.query.userId);
+        res.send(result ? result[0] : []);
+    }
+    catch (err) {
+        console.error('Error getting posts:', err);
+        res.status(500).send('Error getting posts');
+    }
 });
 
 router.post('/', async (req, res) => {
     try {
-        const post = req.body; 
+        const post = req.body;
         await postsDB.addPost(post);
         console.log('Post added');
         res.send();
@@ -23,8 +29,14 @@ router.post('/', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-    await toolsDB.deleteItem("posts", req.params.id);
-    res.send();
+    try {
+        await toolsDB.deleteItem("posts", req.params.id);
+        res.send();
+    }
+    catch (err) {
+        console.error('Error deleting post:', err);
+        res.status(500).send('Error deleting post');
+    }
 })
 
 router.put('/:id', async (req, res) => {

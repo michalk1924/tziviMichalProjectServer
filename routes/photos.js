@@ -6,15 +6,21 @@ const toolsDB = require('../DB/tools');
 const photosDB = require('../DB/photos.js');
 
 router.get('/', async (req, res) => {
-    const albumId = req.query.albumId;
-    const _limit = parseInt(req.query._limit);
-    const _start = parseInt(req.query._start);
-    const result = await toolsDB.getAll("photos", "albumId", albumId);
-    if(_limit !=null && _start!=null) {
-        const sliceResult = result[0].slice(_start, _start + _limit);
-        res.send(result? sliceResult : [])
+    try {
+        const albumId = req.query.albumId;
+        const _limit = parseInt(req.query._limit);
+        const _start = parseInt(req.query._start);
+        const result = await toolsDB.getAll("photos", "albumId", albumId);
+        if (_limit != null && _start != null) {
+            const sliceResult = result[0].slice(_start, _start + _limit);
+            res.send(result ? sliceResult : [])
+        }
+        else res.send(result ? result[0] : []);
     }
-    else res.send(result ? result[0] : []);
+    catch (err) {
+        console.error('Error getting photos:', err);
+        res.status(500).send('Error getting photos');
+    }
 });
 
 router.post('/', async (req, res) => {
@@ -30,8 +36,14 @@ router.post('/', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-    await toolsDB.deleteItem("photos", req.params.id);
-    res.send();
+    try {
+        await toolsDB.deleteItem("photos", req.params.id);
+        res.send();
+    }
+    catch (err) {
+        console.error('Error deleting photo:', err);
+        res.status(500).send('Error deleting photo');
+    }
 })
 
 router.put('/:id', async (req, res) => {

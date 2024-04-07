@@ -158,7 +158,7 @@ const createTablePasswords = async () => {
         var sql = String.raw
             `CREATE TABLE passwords (
             userId INT PRIMARY KEY ,
-            password INT,
+            password varchar(255),
             FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
         );`;
         connection.query(sql, function (err, result) {
@@ -177,6 +177,7 @@ const createTables = async () => {
     createTablePosts();
     createTableComments();
     createTableTodos();
+    createTablePasswords();
 }
 
 const deleteTables = async () => {
@@ -187,6 +188,8 @@ const deleteTables = async () => {
     deleteTable("albums");
     deleteTable("users");
 }
+
+//insert to tables
 
 const insertTodos = async () => {
     const todos = [
@@ -4926,7 +4929,7 @@ const insertComments = async () => {
     try {
         for (let i = 0; i < comments.length; i++) {
             const query = String.raw`
-            IINSERT INTO COMMENTS (postId, name, email, body)
+            INSERT INTO COMMENTS (postId, name, email, body)
             VALUES (${comments[i].postId}, '${comments[i].name}', '${comments[i].email}', '${comments[i].body}');
     `;
             await connection.promise().query(query);
@@ -40714,6 +40717,33 @@ const insertUsers = async () => {
     }
 }
 
+const insertPasswords = async () => {
+    const passwords = [
+        "hildegard.org",
+        "anastasia.net",
+        "ramiro.info",
+        "kale.biz",
+        "demarco.info",
+        "ola.org",
+        "elvis.io",
+        "jacynthe.com",
+        "conrad.com",
+        "ambrose.net"
+      ]
+    try {
+        for (let i = 0; i < passwords.length; i++) {
+            const query = String.raw`
+          INSERT INTO passwords (userId, password) 
+          VALUES (${i+1}, '${passwords[i]}');
+    `;
+            await connection.promise().query(query);
+        }
+        console.log('sucess inserted passwords');
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const insertAll = async () => {
     insertUsers();
     insertAlbums();
@@ -40721,6 +40751,7 @@ const insertAll = async () => {
     insertPosts();
     insertComments();
     insertTodos();
+    insertPasswords();
 }
 
 module.exports = {

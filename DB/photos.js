@@ -15,7 +15,7 @@ async function addPhoto(photo) {
             INSERT INTO PHOTOS (albumId, title, url, thumbnailUrl)
             VALUES (${photo.albumId}, '${photo.title}', '${photo.url}', '${photo.thumbnailUrl}');
         `;
-        await connection.promise().query(query);
+    await connection.promise().query(query);
 }
 
 async function updatePhoto(photo, id) {
@@ -26,8 +26,8 @@ async function updatePhoto(photo, id) {
         thumbnailUrl = '${photo.thumbnailUrl}'
     WHERE id = ${id};
 `;
-await connection.promise().query(query);
+    await connection.promise().query(query);
 }
 
-module.exports = {addPhoto, updatePhoto}
+module.exports = { addPhoto, updatePhoto }
 

@@ -14,15 +14,10 @@ const server = express();
 const host = process.env.HOST_NAME;
 const port = process.env.PORT_SERVER;
 
-// server.use((req, res, next) => {
-//     console.log('before')
-//     next();
-// })
-
 server.use(express.json());
 
 server.use(cors({
-    origin: 'http://localhost:5173', 
+    origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
     credentials: true
@@ -37,7 +32,7 @@ server.use('/comments', commentsRouter);
 server.use('/posts', postsRouter);
 
 server.get('/', (req, res) => {
-    res.send('Hello World!');
+    res.send('main page!');
 });
 
 server.listen(port, () => {
