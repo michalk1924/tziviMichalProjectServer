@@ -13,21 +13,17 @@ var connection = mysql.createConnection({
 const express = require('express');
 const router = express.Router();
 
-const tools = require('./tools');
+const toolsDB = require('../DB/tools');
 
 router.get('/', async (req, res) => {
-    const result = await tools.getAll("posts", "userId", req.query.userId);
+    const result = await toolsDB.getAll("posts", "userId", req.query.userId);
     res.send(result? result[0]: []);
 });
 
 router.post('/', async (req, res) => {
     try {
-        const post = req.body;
-        const query = String.raw`
-            INSERT INTO POSTS (userId, title, body)
-            VALUES (${post.userId}, '${post.title}', '${post.body}');
-        `;
-        const result = await connection.promise().query(query);
+        const post = req.body; 
+        await toolsDB.addPost(post);
         console.log('Post added');
         res.send();
     } catch (err) {
@@ -37,7 +33,7 @@ router.post('/', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-    await tools.deleteItem("posts", req.params.id);
+    await toolsDB.deleteItem("posts", req.params.id);
     res.send();
 })
 

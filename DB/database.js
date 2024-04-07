@@ -168,7 +168,24 @@ const createTablePasswords = async () => {
    }
 }
 
+const createTables = async () => {
+    createTableUsers();
+    createTableAlbums();
+    createTablePhotos();
+    createTablePosts();
+    createTableComments();
+    createTableTodos();
+}
+
+const deleteTables = async () => {
+    deleteTable("todos");
+    deleteTable("comments");
+    deleteTable("posts");
+    deleteTable("photos");
+    deleteTable("albums");
+    deleteTable("users");
+}
+
 module.exports = {
-    createDB, deleteTable, createTablePosts, createTableComments, createTableAlbums,
-    createTableUsers, createTablePhotos, createTableTodos, createTablePasswords
+    createDB, deleteTables, createTables
 };

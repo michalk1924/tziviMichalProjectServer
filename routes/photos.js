@@ -13,10 +13,10 @@ var connection = mysql.createConnection({
 const express = require('express');
 const router = express.Router();
 
-const tools = require('./tools');
+const tools = require('../DB/tools');
 
 router.get('/', async (req, res) => {
-    const result = await tools.getAll("photos", "albumId", req.query.userId);
+    const result = await tools.getAll("photos", "albumId", req.query.albumId);
     res.send(result? result[0]: []);
 });
 

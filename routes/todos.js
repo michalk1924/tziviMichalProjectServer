@@ -1,34 +1,19 @@
 
-var mysql = require('mysql2');
-require('dotenv').config();
-
-var connection = mysql.createConnection({
-    host: process.env.HOST_NAME,
-    user: process.env.USER,
-    port: process.env.PORTSQL,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE
-});
-
 const express = require('express');
 const router = express.Router();
 
-const tools = require('./tools');
+const toolsDB = require('../DB/tools');
+const todosDB = require('../DB/todos');
 
 router.get('/', async (req, res) => {
-    const result = await tools.getAll("todos", "userId", req.query.userId);
-    console.log(result);
+    const result = await toolsDB.getAll("todos", "userId", req.query.userId);
     res.send(result[0]);
 });
 
 router.post('/', async (req, res) => {
     try {
         const todo = req.body;
-        const query = String.raw`
-            INSERT INTO TODOS (userId, title, completed)
-            VALUES (${todo.userId}, '${todo.title}', ${todo.completed ? 1 : 0});
-        `;
-        const result = await connection.promise().query(query);
+        await todosDB.addTodo(todo);
         console.log('Todo added');
         res.send();
     } catch (err) {
@@ -38,20 +23,14 @@ router.post('/', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-    await tools.deleteItem("todos", req.params.id);
+    await toolsDB.deleteItem("todos", req.params.id);
     res.send();
 })
 
 router.put('/:id', async (req, res) => {
     try {
         const todo = req.body;
-        const query = String.raw`
-            UPDATE TODOS 
-            SET title = '${todo.title}',
-                completed = ${todo.completed ? 1 : 0}
-            WHERE id = ${req.params.id};
-        `;
-        await connection.promise().query(query);
+        await todosDB.updateTodo(todo);
         console.log('Todo updated');
         res.send();
     } catch (err) {
@@ -59,6 +38,5 @@ router.put('/:id', async (req, res) => {
         res.status(500).send('Error updating todo');
     }
 });
-
 
 module.exports = router;

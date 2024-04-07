@@ -28,24 +28,6 @@ server.use(cors({
     credentials: true
 }))
 
-const createTables = async () => {
-    database.createTableUsers();
-    database.createTableAlbums();
-    database.createTablePhotos();
-    database.createTablePosts();
-    database.createTableComments();
-    database.createTableTodos();
-}
-
-const deleteTables = async () => {
-    database.deleteTable("todos");
-    database.deleteTable("comments");
-    database.deleteTable("posts");
-    database.deleteTable("photos");
-    database.deleteTable("albums");
-    database.deleteTable("users");
-}
-
 // const todo={
 //     completed: false,
 //     title: 'todo',
