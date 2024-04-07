@@ -1,15 +1,4 @@
 
-var mysql = require('mysql2');
-require('dotenv').config();
-
-var connection = mysql.createConnection({
-    host: process.env.HOST_NAME,
-    user: process.env.USER,
-    port: process.env.PORTSQL,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE
-});
-
 const express = require('express');
 const router = express.Router();
 

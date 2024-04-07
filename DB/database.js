@@ -4926,7 +4926,7 @@ const insertComments = async () => {
     try {
         for (let i = 0; i < comments.length; i++) {
             const query = String.raw`
-            INSERT INTO COMMENTS (postId, name, email, body)
+            IINSERT INTO COMMENTS (postId, name, email, body)
             VALUES (${comments[i].postId}, '${comments[i].name}', '${comments[i].email}', '${comments[i].body}');
     `;
             await connection.promise().query(query);
@@ -40705,7 +40705,7 @@ const insertUsers = async () => {
         for (let i = 0; i < users.length; i++) {
             const query = String.raw`
           INSERT INTO users (name, username, email, address_street, address_city, phone, website) 
-          VALUES ('${users[i].name}', '${users[i].username}', '${users[i].email}', '${users[i].address.street}', '${users[i].address.city}', '${users[i].phone}','${users[i].website}' );
+          VALUES ('${users[i].name}', '${users[i].username}', '${users[i].email}', '${users[i].address.street}', '${users[i].address.city}', '${users[i].phone}', '${users[i].website}' );
     `;
             await connection.promise().query(query);
         }

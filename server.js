@@ -28,22 +28,6 @@ server.use(cors({
     credentials: true
 }))
 
-// const todo={
-//     completed: false,
-//     title: 'todo',
-//     userId: 1
-// }
-// addTodo(todo);
-
-// server.use(cors({
-//     origin: 'http://localhost:5173', 
-//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
-//     allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
-//     credentials: true
-// }))
-
-database.insertAll();
-
 server.use('/todos', todosRouter)
 server.use('/albums', albumsRouter)
 server.use('/photos', photosRouter);

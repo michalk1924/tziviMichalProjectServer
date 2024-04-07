@@ -7,7 +7,7 @@ const todosDB = require('../DB/todos');
 
 router.get('/', async (req, res) => {
     const result = await toolsDB.getAll("todos", "userId", req.query.userId);
-    res.send(result[0]);
+    res.send(result? result[0] : []);
 });
 
 router.post('/', async (req, res) => {
