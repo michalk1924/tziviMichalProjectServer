@@ -18,12 +18,12 @@ async function addTodo(todo) {
     const result = await connection.promise().query(query);
 }
 
-async function updateTodo(todo) {
+async function updateTodo(todo, id) {
     const query = String.raw`
     UPDATE TODOS 
     SET title = '${todo.title}',
         completed = ${todo.completed ? 1 : 0}
-    WHERE id = ${todo.id};
+    WHERE id = ${id};
 `;
     await connection.promise().query(query);
 }

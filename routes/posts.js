@@ -1,19 +1,9 @@
 
-var mysql = require('mysql2');
-require('dotenv').config();
-
-var connection = mysql.createConnection({
-    host: process.env.HOST_NAME,
-    user: process.env.USER,
-    port: process.env.PORTSQL,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE
-});
-
 const express = require('express');
 const router = express.Router();
 
 const toolsDB = require('../DB/tools');
+const postsDB = require('../DB/posts');
 
 router.get('/', async (req, res) => {
     const result = await toolsDB.getAll("posts", "userId", req.query.userId);
@@ -23,7 +13,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const post = req.body; 
-        await toolsDB.addPost(post);
+        await postsDB.addPost(post);
         console.log('Post added');
         res.send();
     } catch (err) {
@@ -40,13 +30,7 @@ router.delete('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const post = req.body;
-        const query = String.raw`
-            UPDATE POSTS 
-            SET title = '${post.title}',
-                body = '${post.body}'
-            WHERE id = ${req.params.id};
-        `;
-        await connection.promise().query(query);
+        await postsDB.updatePost(post, req.params.id)
         console.log('Post updated');
         res.send();
     } catch (err) {

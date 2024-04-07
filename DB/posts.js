@@ -9,7 +9,7 @@ var connection = mysql.createConnection({
     database: process.env.DATABASE
 });
 
-async function addPost(todo) {
+async function addPost(post) {
     const query = String.raw`
     INSERT INTO POSTS (userId, title, body)
     VALUES (${post.userId}, '${post.title}', '${post.body}');
@@ -17,15 +17,14 @@ async function addPost(todo) {
     await connection.promise().query(query);
 }
 
-async function updateTodo(todo) {
-    const query = String.raw`
-    UPDATE TODOS 
-    SET title = '${todo.title}',
-        completed = ${todo.completed ? 1 : 0}
-    WHERE id = ${req.params.id};
-`;
-    await connection.promise().query(query);
-    console.log('Todo updated');
+async function updatePost(post, id) {
+        const query = String.raw`
+            UPDATE POSTS 
+            SET title = '${post.title}',
+                body = '${post.body}'
+            WHERE id = ${id};
+        `;
+        await connection.promise().query(query);
 }
 
-module.exports = { addTodo, updateTodo }
+module.exports = { addPost, updatePost }
