@@ -30,7 +30,7 @@ router.delete('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const todo = req.body;
-        await todosDB.updateTodo(todo);
+        await todosDB.updateTodo(todo, req.params.id);
         console.log('Todo updated');
         res.send();
     } catch (err) {
