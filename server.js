@@ -42,6 +42,8 @@ server.use(cors({
 //     credentials: true
 // }))
 
+database.insertAll();
+
 server.use('/todos', todosRouter)
 server.use('/albums', albumsRouter)
 server.use('/photos', photosRouter);

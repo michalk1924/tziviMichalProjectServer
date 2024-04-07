@@ -15,7 +15,7 @@ async function addTodo(todo) {
             INSERT INTO TODOS (userId, title, completed)
             VALUES (${todo.userId}, '${todo.title}', ${todo.completed ? 1 : 0});
         `;
-    const result = await connection.promise().query(query);
+    await connection.promise().query(query);
 }
 
 async function updateTodo(todo, id) {
