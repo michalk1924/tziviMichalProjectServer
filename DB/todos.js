@@ -23,7 +23,7 @@ async function updateTodo(todo) {
     UPDATE TODOS 
     SET title = '${todo.title}',
         completed = ${todo.completed ? 1 : 0}
-    WHERE id = ${req.params.id};
+    WHERE id = ${todo.id};
 `;
     await connection.promise().query(query);
 }
